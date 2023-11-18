@@ -1,58 +1,34 @@
-# Week6
+Week 6 - Challenge 5
+API REST Things I already know / Lo que queráis
+Crea una API REST que se conecte a un fichero JSON, para manipular recursos de tipo cosas que ya sé. El JSON tendrá una sola propiedad de tipo array, donde almacenarán objetos que representarán cosas que hemos aprendido en el bootcamp.
 
-Código de Week6 / Server - Express
+La API REST debe tener los siguientes endpoints:
 
-- Node
-- Express
-- Mongo (Mongoose)
+[GET] /things -> devuelve el array de cosas que ya sé
 
-- TS...
+[GET] /things/:idThing -> devuelve una cosa que ya sé
 
-## Installation
+[DELETE] /things/:idThing -> borra una cosa que ya sé
 
-- TS
+[POST] /things -> crea una cosa que ya sé (la recibe en el body)
 
-```shell
-npm i -D typescript
-```
+[PATCH] /things/:id -> modifica una cosa que ya sé (la recibe en el body)
 
-- config TS
+Usamos express con las capas:
 
-```shell
-npx tsc --init
-```
+app
+router
+controller
+model
+(opcional repo)
+AÑADIMOS un front con REDUX testado
 
-- eslint & TS
+Lista de 'things'
 
-```shell
-npx eslint --init
+Añadir 'thing'
 
-Consecuencia
-npm i -D eslint @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-config-xo
-```
+Borrar 'thing'
 
-- eslint + prettier
+Editar 'thing'
 
-```shell
-npm i -D eslint-config-prettier
-```
-
-- Jest
-
-```shell
-
-npm i -D jest ts-jest @types/jest @types/node jest-ts-webcompat-resolver
-```
-
-- .editorconfig
-- .gitignore
-- npm init
-- git init
-
-
-## Express
-
-```shell
-npm i express
-npm i -D @types/express
-```
+Página de detalle
