@@ -1,0 +1,64 @@
+{
+  "hobbies": [
+    {
+      "id": 1,
+      "topic": "drive",
+      "name": "Serafin",
+      "place": "Malaga"
+    },
+    {
+      "id": 2,
+      "topic": "ride a bike",
+      "name": "Pepe",
+      "place": "Almeria"
+    },
+    {
+      "id": 3,
+      "topic": "Cinema",
+      "name": "Andres",
+      "place": "Almeria"
+    },
+    {
+      "id": 5,
+      "topic": "travel",
+      "name": "Ramon",
+      "place": "Viena"
+    },
+    {
+      "id": 6,
+      "topic": "camping",
+      "name": "Luis",
+      "place": "Conil"
+    },
+    {
+      "id": 7,
+      "topic": "ride a motorbike",
+      "name": "Laura",
+      "place": "Córdoba"
+    },
+    {
+      "id": 8,
+      "topic": "work out",
+      "name": "Luisa",
+      "place": "El Ejido"
+    },
+    {
+      "id": 9,
+      "topic": "running",
+      "name": "Joseph",
+      "place": "Madrid"
+    },
+    {
+      "id": 10,
+      "topic": "Visit museums",
+      "name": "John",
+      "place": "London"
+    },
+    {
+      "id": 11,
+      "topic": "ride a fdhgdshorse",
+      "name": "Pfdsgedfshspa",
+      "place": "Cadshsfgsdiz"
+    }
+  ]
+}

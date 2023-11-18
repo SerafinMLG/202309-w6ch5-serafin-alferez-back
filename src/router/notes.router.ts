@@ -4,15 +4,13 @@ import {
   getAll,
   getById,
   remove,
-  search,
   update,
 } from '../controller/notes.controller.js';
 
-export const notesRouter = createRouter();
+export const hobbiesRouter = createRouter();
 
-notesRouter.get('/', getAll);
-notesRouter.get('/search', search);
-notesRouter.get('/:id', getById);
-notesRouter.post('/', create);
-notesRouter.patch('/:id', update);
-notesRouter.delete('/:id', remove);
+hobbiesRouter.get('/', getAll);
+hobbiesRouter.get('/:id', getById);
+hobbiesRouter.post('/', create);
+hobbiesRouter.patch('/:id', update);
+hobbiesRouter.delete('/:id', remove);
