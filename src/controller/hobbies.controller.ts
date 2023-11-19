@@ -20,12 +20,6 @@ export const readDataFile = async () => {
   }
 };
 
-// try {
-//   const myData = fs.readFileSync(dataRoot, 'utf-8');
-//   arrayOfData = JSON.parse(myData).things || [];
-// } catch (error) {
-//   console.log('Error al leer el archivo', error);
-// }
 
 export const getAll = (_req: Request, res: Response) => {
   res.json(arrayOfData);
