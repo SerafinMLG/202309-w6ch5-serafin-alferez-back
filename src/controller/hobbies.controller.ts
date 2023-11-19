@@ -4,8 +4,8 @@ import fs from 'fs/promises';
 import { ObjectEncodingOptions } from 'fs';
 
 
-const dataRoot = './api/db.json';
-export let arrayOfData: Hobbies[] = [];
+
+const fileName = './api/db.json';
 
 const codeOptions: ObjectEncodingOptions = {
   encoding: 'utf-8',
@@ -13,43 +13,79 @@ const codeOptions: ObjectEncodingOptions = {
 
 export const readDataFile = async () => {
   try {
-    const myData = (await fs.readFile(dataRoot, codeOptions)) as unknown as string;
-    arrayOfData = JSON.parse(myData).hobbies || [];
+    const rawData = (await fs.readFile(fileName, codeOptions)) as string;
+    return JSON.parse(rawData).hobbies as Hobbies[];
   } catch (error) {
     console.log((error as Error).message);
   }
 };
 
-readDataFile();
-
-export const getAll = (_req: Request, res: Response) => {
-  res.json(arrayOfData);
+const writeDataFile = async (hobbies: Hobbies[]) => {
+  try {
+    const data = { hobbies }; // Crear un objeto con la propiedad "films"
+    await fs.writeFile(fileName, JSON.stringify(data), 'utf8');
+  } catch (error) {
+    console.log((error as Error).message);
+  }
 };
 
-export const getById = (req: Request, res: Response) => {
-  const result = arrayOfData.find((item) => item.id === Number(req.params.id));
-  res.json(result);
+export const getAll = async (_req: Request, res: Response) => {
+  const jsonData = await readDataFile();
+  res.json(jsonData);
 };
 
-export const search = (_req: Request, _res: Response) => {};
-
-export const create = (req: Request, res: Response) => {
-  const result = { ...req.body, id: arrayOfData.length + 1 };
-  arrayOfData.push(result);
-  res.json(result);
-};
-
-export const update = (req: Request, res: Response) => {
-  let result = arrayOfData.find((item) => Number(item.id) === Number(req.params.id));
-  result = { ...result, ...req.body };
-  arrayOfData[arrayOfData.findIndex((item) => item.id === Number(req.params.id))] = result!;
-  res.json(result);
-};
-
-export const remove = (req: Request, res: Response) => {
-  arrayOfData.splice(
-    arrayOfData.findIndex((item) => item.id === Number(req.params.id)),
-    1
+export const getById = async (req: Request, res: Response) => {
+  const jsonData = (await readDataFile()) as Hobbies[];
+  const result = jsonData.find(
+    (item: { id: number }) => item.id === Number(req.params.id)
   );
-  res.json({});
+  res.json(result);
+};
+
+export const create = async (req: Request, res: Response) => {
+  const jsonData = (await readDataFile()) as Hobbies[];
+  const maxId = Math.max(...jsonData.map((item) => item.id), 0);
+  const newHobbie = { ...req.body, id: maxId + 1 };
+  jsonData.push(newHobbie);
+  await writeDataFile(jsonData);
+  res.json(newHobbie);
+};
+
+export const update = async (req: Request, res: Response) => {
+  try {
+    const jsonData = (await readDataFile()) as Hobbies[];
+    const index = jsonData.findIndex(
+      (item: { id: number }) => item.id === Number(req.params.id)
+    );
+    // eslint-disable-next-line no-negated-condition
+    if (index !== -1) {
+      const updatedHobbie = { ...jsonData[index], ...req.body };
+      jsonData[index] = updatedHobbie;
+      await writeDataFile(jsonData);
+      res.json(updatedHobbie);
+    } else {
+      res.status(404).json({ error: 'Hobbies not found' });
+    }
+  } catch (error) {
+    console.log((error as Error).message);
+  }
+};
+
+export const remove = async (req: Request, res: Response) => {
+  try {
+    const jsonData = (await readDataFile()) as Hobbies[];
+    const index = jsonData.findIndex(
+      (item: { id: number }) => item.id === Number(req.params.id)
+    );
+    // eslint-disable-next-line no-negated-condition
+    if (index !== -1) {
+      jsonData.splice(index, 1);
+      await writeDataFile(jsonData);
+      res.json({});
+    } else {
+      res.status(404).json({ error: 'Hobbies not found' });
+    }
+  } catch (error) {
+    console.log((error as Error).message);
+  }
 };
