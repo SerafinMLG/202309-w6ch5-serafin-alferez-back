@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
-import { hobbiesRouter } from './router/notes.router.js';
+import { hobbiesRouter } from './router/hobbies.router.js';
 
 export const app = express();
 

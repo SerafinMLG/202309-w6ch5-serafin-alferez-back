@@ -55,10 +55,16 @@
       "place": "London"
     },
     {
-      "id": 11,
-      "topic": "ride a fdhgdshorse",
-      "name": "Pfdsgedfshspa",
-      "place": "Cadshsfgsdiz"
+      "topic": "go to the beach",
+      "name": "Anton",
+      "place": "Chiclana",
+      "id": 12
+    },
+    {
+      "topic": "traveling",
+      "name": "Hannah",
+      "place": "Sofia",
+      "id": 13
     }
   ]
 }

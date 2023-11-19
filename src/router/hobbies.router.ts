@@ -5,7 +5,7 @@ import {
   getById,
   remove,
   update,
-} from '../controller/notes.controller.js';
+} from '../controller/hobbies.controller.js';
 
 export const hobbiesRouter = createRouter();
 

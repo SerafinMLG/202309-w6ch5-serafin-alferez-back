@@ -1,17 +1,31 @@
 import { Request, Response } from 'express';
 import { Hobbies } from '../model/hobbies';
-import fs from 'fs';
+import fs from 'fs/promises';
+import { ObjectEncodingOptions } from 'fs';
 
 
 const dataRoot = './api/db.json';
 export let arrayOfData: Hobbies[] = [];
 
-try {
-  const myData = fs.readFileSync(dataRoot, 'utf-8');
-  arrayOfData = JSON.parse(myData).things || [];
-} catch (error) {
-  console.log('Error al leer el archivo', error);
-}
+const codeOptions: ObjectEncodingOptions = {
+  encoding: 'utf-8',
+};
+
+export const readDataFile = async () => {
+  try {
+    const myData = (await fs.readFile(dataRoot, codeOptions)) as unknown as string;
+    arrayOfData = JSON.parse(myData).hobbies || [];
+  } catch (error) {
+    console.log((error as Error).message);
+  }
+};
+
+// try {
+//   const myData = fs.readFileSync(dataRoot, 'utf-8');
+//   arrayOfData = JSON.parse(myData).things || [];
+// } catch (error) {
+//   console.log('Error al leer el archivo', error);
+// }
 
 export const getAll = (_req: Request, res: Response) => {
   res.json(arrayOfData);
