@@ -20,6 +20,7 @@ export const readDataFile = async () => {
   }
 };
 
+readDataFile();
 
 export const getAll = (_req: Request, res: Response) => {
   res.json(arrayOfData);
