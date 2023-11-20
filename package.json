@@ -8,10 +8,11 @@
     "start": "node dist/index.js",
     "start:dev": "cross-env PORT=2700 nodemon dist/index.js",
     "build": "tsc -w",
-    "test": "jest --watchAll --coverage"
+    "test": "jest --watchAll --coverage",
+    "api": "json-server --watch ./api/db.json"
   },
   "keywords": [],
-  "author": "Alejandro Cerezo",
+  "author": "Serafin Alferez",
   "license": "ISC",
   "prettier": {
     "singleQuote": true
