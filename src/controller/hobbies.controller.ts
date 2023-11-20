@@ -1,91 +1,52 @@
-import { Request, Response } from 'express';
-import { Hobbies } from '../model/hobbies';
-import fs from 'fs/promises';
-import { ObjectEncodingOptions } from 'fs';
+import { NextFunction, Request, Response } from 'express';
+import { HobbiesFileRepo } from '../repos/hobbies.file.repo.js';
+import createDebug from 'debug';
 
+const debug = createDebug('W7E:tasks:controller');
 
-
-const fileName = './api/db.json';
-
-const codeOptions: ObjectEncodingOptions = {
-  encoding: 'utf-8',
-};
-
-export const readDataFile = async () => {
-  try {
-    const rawData = (await fs.readFile(fileName, codeOptions)) as string;
-    return JSON.parse(rawData).hobbies as Hobbies[];
-  } catch (error) {
-    console.log((error as Error).message);
+export class HobbiesController {
+  repo: HobbiesFileRepo;
+  constructor() {
+    debug('Instantiated');
+    this.repo = new HobbiesFileRepo();
   }
-};
 
-const writeDataFile = async (hobbies: Hobbies[]) => {
-  try {
-    const data = { hobbies }; // Crear un objeto con la propiedad "films"
-    await fs.writeFile(fileName, JSON.stringify(data), 'utf8');
-  } catch (error) {
-    console.log((error as Error).message);
+  async getAll(_req: Request, res: Response) {
+    const result = await this.repo.getAll();
+    res.json(result);
   }
-};
 
-export const getAll = async (_req: Request, res: Response) => {
-  const jsonData = await readDataFile();
-  res.json(jsonData);
-};
-
-export const getById = async (req: Request, res: Response) => {
-  const jsonData = (await readDataFile()) as Hobbies[];
-  const result = jsonData.find(
-    (item: { id: number }) => item.id === Number(req.params.id)
-  );
-  res.json(result);
-};
-
-export const create = async (req: Request, res: Response) => {
-  const jsonData = (await readDataFile()) as Hobbies[];
-  const maxId = Math.max(...jsonData.map((item) => item.id), 0);
-  const newHobbie = { ...req.body, id: maxId + 1 };
-  jsonData.push(newHobbie);
-  await writeDataFile(jsonData);
-  res.json(newHobbie);
-};
-
-export const update = async (req: Request, res: Response) => {
-  try {
-    const jsonData = (await readDataFile()) as Hobbies[];
-    const index = jsonData.findIndex(
-      (item: { id: number }) => item.id === Number(req.params.id)
-    );
-    // eslint-disable-next-line no-negated-condition
-    if (index !== -1) {
-      const updatedHobbie = { ...jsonData[index], ...req.body };
-      jsonData[index] = updatedHobbie;
-      await writeDataFile(jsonData);
-      res.json(updatedHobbie);
-    } else {
-      res.status(404).json({ error: 'Hobbies not found' });
+  async getById(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await this.repo.getById(req.params.id);
+      res.json(result);
+    } catch (error) {
+      next(error);
     }
-  } catch (error) {
-    console.log((error as Error).message);
   }
-};
 
-export const remove = async (req: Request, res: Response) => {
-  try {
-    const jsonData = (await readDataFile()) as Hobbies[];
-    const index = jsonData.findIndex(
-      (item: { id: number }) => item.id === Number(req.params.id)
-    );
-    // eslint-disable-next-line no-negated-condition
-    if (index !== -1) {
-      jsonData.splice(index, 1);
-      await writeDataFile(jsonData);
+  search = (_req: Request, _res: Response) => {};
+
+  async create(req: Request, res: Response) {
+    const result = await this.repo.create(req.body);
+    res.status(201);
+    res.statusMessage = 'Created';
+    res.json(result);
+  }
+
+  async update(req: Request, res: Response) {
+    const result = await this.repo.update(req.params.id, req.body);
+    res.json(result);
+  }
+
+  async delete(req: Request, res: Response, next: NextFunction) {
+    try {
+      await this.repo.delete(req.params.id);
+      res.status(204);
+      res.statusMessage = 'No Content';
       res.json({});
-    } else {
-      res.status(404).json({ error: 'Hobbies not found' });
+    } catch (error) {
+      next(error);
     }
-  } catch (error) {
-    console.log((error as Error).message);
   }
-};
+}

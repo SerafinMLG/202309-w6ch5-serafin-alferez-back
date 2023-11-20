@@ -1,5 +1,5 @@
 export type Hobbies = {
-  id: number,
+  id: string,
   topic: string,
   name: string,
   place: string,
