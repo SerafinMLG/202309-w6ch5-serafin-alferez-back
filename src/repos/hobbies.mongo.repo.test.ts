@@ -1,14 +1,14 @@
-import { HobbiesFileRepo } from './hobbies.file.repo';
+import { HobbiesMongoRepo } from './hobbies.mongo.repo';
 import fs from 'fs/promises';
 
 jest.mock('fs/promises');
 
-describe('Given HobbiesFileRepo class', () => {
+describe('Given HobbiesMongoRepo class', () => {
   describe('When we instantiate it', () => {
     const mockData = '[{"name": "Test"}]';
     fs.readFile = jest.fn().mockResolvedValue(mockData);
     fs.writeFile = jest.fn();
-    const repo = new HobbiesFileRepo();
+    const repo = new HobbiesMongoRepo();
 
     test('Then getAll should ...', async () => {
       const result = await repo.getAll();
@@ -17,9 +17,9 @@ describe('Given HobbiesFileRepo class', () => {
   });
 
   describe('When we instantiate it', () => {
-    let repo: HobbiesFileRepo;
+    let repo: HobbiesMongoRepo;
     beforeEach(() => {
-      repo = new HobbiesFileRepo();
+      repo = new HobbiesMongoRepo();
     });
 
     test('then should retrieve hobby by ID', async () => {
@@ -37,10 +37,10 @@ describe('Given HobbiesFileRepo class', () => {
 
 
   describe('when we create:', () => {
-    let repo: HobbiesFileRepo;
+    let repo: HobbiesMongoRepo;
   
     beforeEach(() => {
-      repo = new HobbiesFileRepo();
+      repo = new HobbiesMongoRepo();
     });
   
     test('then it should create a new hobby', async () => {
@@ -59,10 +59,10 @@ describe('Given HobbiesFileRepo class', () => {
   });
 
   describe('when update', () => {
-    let repo: HobbiesFileRepo;
+    let repo: HobbiesMongoRepo;
   
     beforeEach(() => {
-      repo = new HobbiesFileRepo();
+      repo = new HobbiesMongoRepo();
     });
   
     it('should update an existing hobby', async () => {
@@ -101,10 +101,10 @@ describe('Given HobbiesFileRepo class', () => {
   });
   
   describe('When we delete:', () => {
-    let repo: HobbiesFileRepo;
+    let repo: HobbiesMongoRepo;
   
     beforeEach(() => {
-      repo = new HobbiesFileRepo();
+      repo = new HobbiesMongoRepo();
     });
   
     it('should delete an existing hobby', async () => {
