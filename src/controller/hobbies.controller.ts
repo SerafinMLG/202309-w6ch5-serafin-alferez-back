@@ -1,19 +1,24 @@
 import { NextFunction, Request, Response } from 'express';
-import { HobbiesFileRepo } from '../repos/hobbies.file.repo.js';
-import createDebug from 'debug';
 
-const debug = createDebug('W7E:tasks:controller');
+import createDebug from 'debug';
+import { Repository } from '../repos/repo';
+import { Hobbies } from '../entities/hobbies';
+
+const debug = createDebug('W7E:hobbies:controller');
 
 export class HobbiesController {
-  repo: HobbiesFileRepo;
-  constructor() {
+  // eslint-disable-next-line no-unused-vars
+  constructor(private repo: Repository<Hobbies>) {
     debug('Instantiated');
-    this.repo = new HobbiesFileRepo();
   }
 
-  async getAll(_req: Request, res: Response) {
-    const result = await this.repo.getAll();
-    res.json(result);
+  async getAll(_req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await this.repo.getAll();
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
   }
 
   async getById(req: Request, res: Response, next: NextFunction) {
@@ -27,16 +32,24 @@ export class HobbiesController {
 
   search = (_req: Request, _res: Response) => {};
 
-  async create(req: Request, res: Response) {
-    const result = await this.repo.create(req.body);
-    res.status(201);
-    res.statusMessage = 'Created';
-    res.json(result);
+  async create(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await this.repo.create(req.body);
+      res.status(201);
+      res.statusMessage = 'Created';
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
   }
 
-  async update(req: Request, res: Response) {
-    const result = await this.repo.update(req.params.id, req.body);
-    res.json(result);
+  async update(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await this.repo.update(req.params.id, req.body);
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
   }
 
   async delete(req: Request, res: Response, next: NextFunction) {
