@@ -1,125 +1,62 @@
-import { HobbiesMongoRepo } from './hobbies.mongo.repo';
-import fs from 'fs/promises';
+import { Hobbies } from '../entities/hobbies.js';
+import { HobbiesMongoRepo } from './hobbies.mongo.repo.js';
+import { HttpError } from '../types/http.error.js';
+import { HobbieModel } from './hobbies.mongo.model.js';
 
-jest.mock('fs/promises');
+jest.mock('./hobbies.mongo.model.js');
 
 describe('Given HobbiesMongoRepo class', () => {
-  describe('When we instantiate it', () => {
-    const mockData = '[{"name": "Test"}]';
-    fs.readFile = jest.fn().mockResolvedValue(mockData);
-    fs.writeFile = jest.fn();
+  let mockId: string;
+  let mockName: string;
+  let mockData: Partial<Hobbies>[];
+
+  beforeEach(() => {
+    mockId = '1';
+    mockName = 'have a fun';
+    mockData = [{ id: mockId, name: mockName }];
+
+    (HobbieModel.find as jest.Mock).mockResolvedValue(mockData);
+    (HobbieModel.findById as jest.Mock).mockResolvedValue(mockData[0]);
+    (HobbieModel.create as jest.Mock).mockResolvedValue(mockData[0]);
+    (HobbieModel.findByIdAndUpdate as jest.Mock).mockResolvedValue(mockData[0]);
+    (HobbieModel.findByIdAndDelete as jest.Mock).mockResolvedValue(mockData[0]);
+  });
+
+  describe('When we instantiate it without errors', () => {
     const repo = new HobbiesMongoRepo();
-
-    test('Then getAll should ...', async () => {
+    test('Then getAll should return the list of hobbies', async () => {
       const result = await repo.getAll();
-      expect(result).toStrictEqual(JSON.parse(mockData));
-    });
-  });
-
-  describe('When we instantiate it', () => {
-    let repo: HobbiesMongoRepo;
-    beforeEach(() => {
-      repo = new HobbiesMongoRepo();
+      expect(result).toEqual(mockData);
     });
 
-    test('then should retrieve hobby by ID', async () => {
-      const allHobbies = await repo.getAll();
-      const hobbyToTest = allHobbies[0];
-      const result = await repo.getById(hobbyToTest.id);
-      expect(result).toEqual(hobbyToTest);
+    test('Then getById should return the hobbie with the specified id', async () => {
+      const result = await repo.getById(mockId);
+      expect(result).toEqual(mockData[0]);
     });
-  
-    test('then should throw an error for non-existing ID', async () => {
-      const nonExistingId = 'non-existing-id';
-      await expect(repo.getById(nonExistingId)).rejects.toThrow('GetById not possible');
-    });
-  });
 
-
-  describe('when we create:', () => {
-    let repo: HobbiesMongoRepo;
-  
-    beforeEach(() => {
-      repo = new HobbiesMongoRepo();
+    test('Then create should add a new hobbie and return it', async () => {
+      const newHobbie = { name: mockName } as Omit<Hobbies, 'id'>;
+      const result = await repo.create(newHobbie);
+      expect(result).toEqual(mockData[0]);
     });
-  
-    test('then it should create a new hobby', async () => {
-      const newItem = {
-        topic: 'New Topic',
-        name: 'New Hobby',
-        place: 'New Place',
-        picture: 'path/to/image.jpg',
-      };
-  
-      const createdHobby = await repo.create(newItem);
-      expect(createdHobby).toMatchObject(newItem);
-      const allHobbies = await repo.getAll();
-      expect(allHobbies).toContainEqual(createdHobby);
-    });
-  });
 
-  describe('when update', () => {
-    let repo: HobbiesMongoRepo;
-  
-    beforeEach(() => {
-      repo = new HobbiesMongoRepo();
-    });
-  
-    it('should update an existing hobby', async () => {
-
-      const allHobbies = await repo.getAll();
-      const hobbyToUpdate = allHobbies[0];
-  
-      const updatedProperties = {
-        name: 'Updated Hobby Name',
-        place: 'Updated Place',
-        picture: 'path/to/updated-image.jpg',
-      };
-  
-      const updatedHobby = await repo.update(hobbyToUpdate.id, updatedProperties);
-  
-      expect(updatedHobby).toMatchObject({
-        ...hobbyToUpdate, // Ensure existing properties are retained
-        ...updatedProperties,
+    test('Then update should modify an existing hobbie and return it', async () => {
+      const updatedHobbie = { name: mockName };
+      const result = await repo.update(mockId, updatedHobbie);
+      expect(result).toStrictEqual({
+        id: mockId,
+        name: mockName,
       });
-  
-      const updatedHobbiesList = await repo.getAll();
-      expect(updatedHobbiesList).toContainEqual(updatedHobby);
-      expect(updatedHobbiesList).not.toContainEqual(hobbyToUpdate);
     });
-  
-    it('should throw an error for updating a non-existing hobby', async () => {
-      const nonExistingId = 'non-existing-id';
-      const updatedProperties = {
-        name: 'Updated Hobby Name',
-        place: 'Updated Place',
-        picture: 'path/to/updated-image.jpg',
-      };
-  
-      await expect(repo.update(nonExistingId, updatedProperties)).rejects.toThrow('Update not possible');
-    });
-  });
-  
-  describe('When we delete:', () => {
-    let repo: HobbiesMongoRepo;
-  
-    beforeEach(() => {
-      repo = new HobbiesMongoRepo();
-    });
-  
-    it('should delete an existing hobby', async () => {
-      const allHobbies = await repo.getAll();
-      const hobbyToDelete = allHobbies[0];
-      await repo.delete(hobbyToDelete.id);
-      const updatedHobbiesList = await repo.getAll();
-      expect(updatedHobbiesList).not.toContainEqual(hobbyToDelete);
-    });
-  
-    it('should throw an error for deleting a non-existing hobby', async () => {
-      const nonExistingId = 'non-existing-id';
-      await expect(repo.delete(nonExistingId)).rejects.toThrow('Delete not possible');
-    });
-  });
-  
 
+    test('Then delete should remove an existing hobbie', async () => {
+      await repo.delete(mockId);
+    });
+
+    test('Then delete should throw HttpError for non-existent id', async () => {
+      const nonExistentId = 'non-existent-id';
+      (HobbieModel.findByIdAndDelete as jest.Mock).mockResolvedValue(null);
+      await expect(repo.delete(nonExistentId)).rejects.toThrow(HttpError);
+    });
   });
+});

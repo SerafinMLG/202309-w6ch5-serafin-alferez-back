@@ -1,5 +1,5 @@
 import { Hobbies } from '../entities/hobbies';
-import { HobbieModel } from './hobbies.mongo.model.js';
+import { HobbieModel } from './hobbies.mongo.model';
 import { Repository } from './repo';
 import { HttpError } from '../types/http.error.js';
 import createDebug from 'debug';
