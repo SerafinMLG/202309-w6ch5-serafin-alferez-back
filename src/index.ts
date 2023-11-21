@@ -11,10 +11,9 @@ const debug = createDebug('W7E:index')
 dbConnect().then(
   (mongoose) => {
     server.listen(PORT);
-   debug('Connected to DB:', mongoose.connection.db.databaseName);
+  debug('Connected to DB:', mongoose.connection.db.databaseName);
   }).catch(error => server.emit(error))
 
-// C server.listen(PORT);
 
 server.on('listening', () => {
   console.log('Listening on port', PORT);
