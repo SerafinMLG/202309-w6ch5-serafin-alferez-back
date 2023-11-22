@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { Hobbies } from '../entities/hobbies';
+import { Hobbies } from '../entities/hobbies.js';
 
 const hobbiesSchema = new Schema<Hobbies>({
   topic: {
