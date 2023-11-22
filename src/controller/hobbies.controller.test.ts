@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { Repository } from '../repos/repo';
-import { Hobbies } from '../entities/hobbies';
-import { HobbiesMongoRepo } from '../repos/hobbies.mongo.repo';
-import { HobbiesController } from './hobbies.controller';
+import { Repository } from '../repos/repo.js';
+import { Hobbies } from '../entities/hobbies.js';
+import { HobbiesMongoRepo } from '../repos/hobbies.mongo.repo.js';
+import { HobbiesController } from './hobbies.controller.js';
 
 describe('Given BeerController class', () => {
   let controller: HobbiesController;

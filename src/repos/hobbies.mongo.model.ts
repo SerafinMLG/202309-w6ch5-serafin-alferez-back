@@ -4,20 +4,16 @@ import { Hobbies } from '../entities/hobbies.js';
 const hobbiesSchema = new Schema<Hobbies>({
   topic: {
     type: String,
-    required: true,
-    unique: true,
   },
-  name: {
-    type: String,
-    required: true,
+  author: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
   },
   place: {
     type: String,
-    required: true,
   },
   picture: {
     type: String,
-    required: true,
   },
 });
 
