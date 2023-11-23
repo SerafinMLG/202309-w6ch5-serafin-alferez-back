@@ -12,4 +12,3 @@ export type User = LoginUser & {
   age: number;
   hobbies: Hobbies[];
 };
-
