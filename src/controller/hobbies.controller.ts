@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 
 import createDebug from 'debug';
-import { Repository } from '../repos/repo';
-import { Hobbies } from '../entities/hobbies';
+import { Repository } from '../repos/repo.js';
+import { Hobbies } from '../entities/hobbies.js';
 
 const debug = createDebug('W7E:hobbies:controller');
 
@@ -12,6 +12,7 @@ export class HobbiesController {
     debug('Instantiated');
   }
 
+  debug = createDebug('CREATE controller');
   async getAll(_req: Request, res: Response, next: NextFunction) {
     try {
       const result = await this.repo.getAll();
@@ -32,6 +33,7 @@ export class HobbiesController {
 
   search = (_req: Request, _res: Response) => {};
 
+  
   async create(req: Request, res: Response, next: NextFunction) {
     try {
       const result = await this.repo.create(req.body);
@@ -39,6 +41,7 @@ export class HobbiesController {
       res.statusMessage = 'Created';
       res.json(result);
     } catch (error) {
+      console.log('error aqui');
       next(error);
     }
   }

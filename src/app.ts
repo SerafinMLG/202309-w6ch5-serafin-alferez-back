@@ -6,6 +6,7 @@ import createDebug from 'debug';
 
 import { errorMiddleware } from './middleware/error.middleware.js';
 import { hobbiesRouter } from './router/hobbies.router.js';
+import { usersRouter } from './router/users.router.js';
 
 const debug = createDebug('W7E:app');
 
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use(express.static('public'));
 
 app.use('/hobbies', hobbiesRouter);
+app.use('/users', usersRouter)
 // Temp app.use('/notes', notesRouter);
 
 app.use(errorMiddleware);
