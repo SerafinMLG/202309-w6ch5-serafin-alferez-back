@@ -4,9 +4,9 @@ import { Hobbies } from '../entities/hobbies';
 import { UsersMongoRepo } from './users/users.mongo.repo.js';
 import { HttpError } from '../types/http.error.js';
 import { Repository } from './repo.js';
+import mongoose from 'mongoose';
 
-
-let debug = createDebug('W7E:hobbies:mongo:repo');
+const debug = createDebug('W7E:hobbies:mongo:repo');
 
 export class HobbiesMongoRepo implements Repository<Hobbies> {
   userRepo: UsersMongoRepo;
@@ -15,8 +15,22 @@ export class HobbiesMongoRepo implements Repository<Hobbies> {
     debug('Instantiated');
   }
 
+  // Sasync search({
+  //   key,
+  //   value,
+  // }: {
+  //   key: keyof Hobbies;
+  //   value: unknown;
+  // }): Promise<Hobbies[]> {
+  //   const result = await HobbieModel.find({ [key]: value })
+  //     .populate('author', {
+  //       notes: 0,
+  //     })
+  //     .exec();
+  //   return result;
+  // }
+
   async getAll(): Promise<Hobbies[]> {
-    debug = createDebug('getAll')
     const result = await HobbieModel.find()
       .populate('author', {
         hobbies: 0,
@@ -35,21 +49,14 @@ export class HobbiesMongoRepo implements Repository<Hobbies> {
     return result;
   }
 
-  search({ _key, _value }: { _key: string; _value: unknown }): Promise<Hobbies[]> {
-    // Temp this.hobbies.find((item) => item[_key] === _value)
-    throw new Error('Method not implemented.');
-  }
-
   
   async create(newItem: Omit<Hobbies, 'id'>): Promise<Hobbies> {
-    debug = createDebug('create')
     const userID = newItem.author.id;
-    newItem.author = await this.userRepo.getById(userID);
-    const result: Hobbies = await HobbieModel.create(newItem);
-
-    newItem.author.hobbies.push(result.id as unknown as Hobbies);
-    debug(newItem.author);
-    await this.userRepo.update(userID, newItem.author);
+    debug('item',newItem)
+    const user = await this.userRepo.getById(userID);   // Aqui comprobamos que el user existe.Si no existe saltará un error por detrás, por eso no hay un IF
+    const result: Hobbies = await HobbieModel.create({ ...newItem, author: userID});
+    user.hobbies.push(result); // Añadimos la nueva nota en el array de notas. Es un cambio local a la variable
+    await this.userRepo.update(userID, user);   // Esto modifica la DB con los cambios.
     return result;
   }
 
@@ -74,5 +81,11 @@ export class HobbiesMongoRepo implements Repository<Hobbies> {
     if (!result) {
       throw new HttpError(404, 'Not Found', 'Delete not possible');
     }
+
+    const userID = result.author.id;
+    const user = await this.userRepo.getById(userID);
+    const film = new mongoose.mongo.ObjectId(id) as unknown as Hobbies;
+    user.hobbies = user.hobbies.filter((item) => item !== film);
+    await this.userRepo.update(userID, user);
   }
 }

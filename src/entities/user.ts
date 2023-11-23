@@ -10,5 +10,5 @@ export type User = LoginUser & {
   name: string;
   surname: string;
   age: number;
-  hobbies: Hobbies[];
+  hobbies: Hobbies[];   // No es obligatorio tener este array pero agiliza el acceso a las notas del usuario
 };

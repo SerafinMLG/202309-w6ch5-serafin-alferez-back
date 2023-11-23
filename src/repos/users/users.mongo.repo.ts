@@ -36,9 +36,15 @@ export class UsersMongoRepo implements Repository<User> {
     return result;
   }
 
-  search({ _key, _value }: { _key: string; _value: unknown }): Promise<User[]> {
-    throw new Error('Method not implemented.');
-  }
+  // Ssearch({
+  //   key,
+  //   value,
+  // }: {
+  //   key: 'id' | 'name' | keyof LoginUser | 'surname' | 'age' | 'hobbies';
+  //   value: unknown;
+  // }): Promise<User[]> {
+  //   throw new Error('Method not implemented.');
+  // }
 
   async update(id: string, updatedItem: Partial<User>): Promise<User> {
     const result = await UserModel.findByIdAndUpdate(id, updatedItem, {
