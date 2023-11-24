@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-
 import createDebug from 'debug';
 import { Repository } from '../repos/repo.js';
 import { Hobbies } from '../entities/hobbies.js';
@@ -12,7 +11,6 @@ export class HobbiesController {
     debug('Instantiated');
   }
 
-  debug = createDebug('CREATE controller');
   async getAll(_req: Request, res: Response, next: NextFunction) {
     try {
       const result = await this.repo.getAll();
@@ -31,17 +29,26 @@ export class HobbiesController {
     }
   }
 
-  search = (_req: Request, _res: Response) => {};
+  // Sasync search(req: Request, res: Response, next: NextFunction) {
+  //   try {
+  //     const result = await this.repo.search({
+  //       key: Object.entries(req.query)[0][0] as keyof Hobbies,
+  //       value: Object.entries(req.query)[0][1],
+  //     });
+  //     res.json(result);
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // }
 
-  
   async create(req: Request, res: Response, next: NextFunction) {
     try {
+      req.body.author = { id: req.body.userId };
       const result = await this.repo.create(req.body);
       res.status(201);
       res.statusMessage = 'Created';
       res.json(result);
     } catch (error) {
-      console.log('error aqui');
       next(error);
     }
   }

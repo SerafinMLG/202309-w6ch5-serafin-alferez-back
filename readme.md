@@ -31,4 +31,5 @@ Borrar 'thing'
 
 Editar 'thing'
 
-Página de detalle;
+Página de detalle; 
+

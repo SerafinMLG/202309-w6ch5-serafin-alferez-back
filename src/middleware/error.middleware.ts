@@ -15,7 +15,7 @@ export const errorMiddleware = (
 
   if (error instanceof HttpError) {
     res.status(error.status);
-    res.statusMessage = error.statusMessage;
+    res.statusMessage = (error as HttpError).statusMessage;
   } else if (error instanceof RangeError) {
     res.status(416);
     res.statusMessage = 'Request Range Not Satisfiable';
