@@ -20,7 +20,7 @@ export class UsersMongoRepo implements Repository<User> {
 
   async login(loginUser: LoginUser): Promise<User> {
     const result = await UserModel.findOne({ email: loginUser.email }).exec();
-    if (!result || !(await Auth.compare(loginUser.passwd, result.passwd)))
+    if (!result || !(await Auth.comparison(loginUser.passwd, result.passwd)))
       throw new HttpError(401, 'Unauthorized');
     return result;
   }

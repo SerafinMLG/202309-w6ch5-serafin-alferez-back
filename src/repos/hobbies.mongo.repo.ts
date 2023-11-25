@@ -72,6 +72,7 @@ export class HobbiesMongoRepo implements Repository<Hobbies> {
     return result;
   }
 
+
   async delete(id: string): Promise<void> {
     const result = await HobbieModel.findByIdAndDelete(id)
       .populate('author', {
@@ -84,8 +85,11 @@ export class HobbiesMongoRepo implements Repository<Hobbies> {
 
     const userID = result.author.id;
     const user = await this.userRepo.getById(userID);
-    const film = new mongoose.mongo.ObjectId(id) as unknown as Hobbies;
-    user.hobbies = user.hobbies.filter((item) => item !== film);
+    // Temp const deletedNoteID = new mongoose.mongo.ObjectId(id);
+    user.hobbies = user.hobbies.filter((item) => {
+      const itemID = item as unknown as mongoose.mongo.ObjectId;
+      return itemID.toString() !== id; // Temp deletedNoteID.toString();
+    });
     await this.userRepo.update(userID, user);
   }
 }
