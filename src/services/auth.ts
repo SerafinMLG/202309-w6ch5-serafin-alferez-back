@@ -7,7 +7,7 @@ import { HttpError } from "../types/http.error.js";
 
 const debug = createDebug('W7E:auth');
 debug('Imported');
-type TokenPayload = {
+export type TokenPayload = {
   id: User['id']
   email: string
 } & jwt.JwtPayload
@@ -19,7 +19,7 @@ export abstract class Auth {
     return hash(value, saltRound)
   }
 
-  static compare(value: string, hash: string): Promise<boolean> {
+  static comparison(value: string, hash: string): Promise<boolean> {
       return compare(value, hash);
   }
 
