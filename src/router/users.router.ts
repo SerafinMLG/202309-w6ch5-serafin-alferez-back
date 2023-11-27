@@ -6,10 +6,11 @@ import { Router as createRouter } from 'express';
 import { FileInterceptor } from '../middleware/file.interceptor.js';
 
 const debug = createDebug('W7E:users:router');
-const fileInterceptor = new FileInterceptor();
+
 export const usersRouter = createRouter();
 debug('Starting');
 
+const fileInterceptor = new FileInterceptor();
 const repo = new UsersMongoRepo();
 const controller = new UsersController(repo);
 const interceptor = new AuthInterceptor();
