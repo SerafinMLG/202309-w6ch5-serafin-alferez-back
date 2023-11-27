@@ -1,3 +1,4 @@
+import { ImgData } from "../types/img.data.js";
 import { User } from "./user.js"
 
 export type Hobbies = {
@@ -5,5 +6,5 @@ export type Hobbies = {
   topic: string,
   author: User,
   place: string,
-  picture: string
+  picture: ImgData;
 } 

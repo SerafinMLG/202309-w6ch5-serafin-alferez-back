@@ -15,20 +15,6 @@ export class HobbiesMongoRepo implements Repository<Hobbies> {
     debug('Instantiated');
   }
 
-  // Sasync search({
-  //   key,
-  //   value,
-  // }: {
-  //   key: keyof Hobbies;
-  //   value: unknown;
-  // }): Promise<Hobbies[]> {
-  //   const result = await HobbieModel.find({ [key]: value })
-  //     .populate('author', {
-  //       notes: 0,
-  //     })
-  //     .exec();
-  //   return result;
-  // }
 
   async getAll(): Promise<Hobbies[]> {
     const result = await HobbieModel.find()
@@ -49,6 +35,20 @@ export class HobbiesMongoRepo implements Repository<Hobbies> {
     return result;
   }
 
+
+  async search({
+    key,
+    value,
+  }: {
+    key:
+ 
+      | keyof Hobbies
+
+    value: unknown;
+  }): Promise<Hobbies[]> {
+    const result = await  HobbieModel.find({ [key]: value }).exec();
+    return result;
+  }
   
   async create(newItem: Omit<Hobbies, 'id'>): Promise<Hobbies> {
     const userID = newItem.author.id;
