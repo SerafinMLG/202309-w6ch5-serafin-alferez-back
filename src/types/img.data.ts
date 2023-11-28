@@ -1,8 +1,8 @@
 export type ImgData = {
-  publicId: string;
+  publicId: string;   // Es el nombre de la imagen tal cual la guarda Cloudinary
   size: number;
-  // Temp width: number;
-  // height: number;
+  width: number;
+  height: number;
   format: string;
   url: string;
 };

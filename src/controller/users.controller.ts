@@ -23,17 +23,16 @@ export class UsersController extends Controller<User> {
     }
   }
 
-  // Casync create(req: Request, res: Response, next: NextFunction) {
-  //   try {
-
-  //     const result = await this.repo.create(req.body);
-  //     res.status(201);
-  //     res.statusMessage = 'Created';
-  //     res.json(result);
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // }
+  async loginWithToken(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = this.repo.getById(req.body.userId);
+      res.json(result);
+      res.status(202);
+      res.statusMessage = 'Accepted';
+    } catch (error) {
+      next(error);
+    }
+  }
 
   async login(req: Request, res: Response, next: NextFunction) {
     try {
@@ -47,6 +46,7 @@ export class UsersController extends Controller<User> {
           email: result.email
         })
       }
+      debug('login controller', data)
       res.status(202);
       res.statusMessage = 'Accepted';
       res.json(data);

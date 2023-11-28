@@ -20,15 +20,17 @@ hobbiesRouter.get('/', controller.getAll.bind(controller));
 hobbiesRouter.get('/:id', controller.getById.bind(controller));
 hobbiesRouter.post(
   '/',
+  interceptor.authorization.bind(interceptor),
   fileInterceptor.singleFileStore('picture').bind(fileInterceptor),
   controller.create.bind(controller)
 );
 hobbiesRouter.patch(
   '/:id',
-  interceptor.authorization.bind(interceptor),
+  interceptor.authorization.bind(interceptor), // Seste interceptor tiene la finalidad de darme el id que viene en el token
   interceptor.authenticationHobbies.bind(interceptor),
   controller.update.bind(controller)
 );
+
 hobbiesRouter.delete(
   '/:id',
   interceptor.authorization.bind(interceptor),

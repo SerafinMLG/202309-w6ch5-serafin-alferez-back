@@ -3,49 +3,30 @@ import createDebug from 'debug';
 import { Repository } from '../repos/repo.js';
 import { Hobbies } from '../entities/hobbies.js';
 import { Controller } from './controller.js';
+import { HttpError } from '../types/http.error.js';
+import { MediaFiles } from '../services/media.files.js';
+
 
 const debug = createDebug('W7E:hobbies:controller');
 
 export class HobbiesController extends Controller<Hobbies>{
+  declare cloudinaryService: MediaFiles;
   // eslint-disable-next-line no-unused-vars
   constructor(protected repo: Repository<Hobbies>) {
     super(repo);
+    this.cloudinaryService = new MediaFiles();
     debug('Instantiated')
   }
 
-  async getAll(_req: Request, res: Response, next: NextFunction) {
-    try {
-      const result = await this.repo.getAll();
-      res.json(result);
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  async getById(req: Request, res: Response, next: NextFunction) {
-    try {
-      const result = await this.repo.getById(req.params.id);
-      res.json(result);
-    } catch (error) {
-      next(error);
-    }
-  }
-
-
   async create(req: Request, res: Response, next: NextFunction) {
     try {
-
-      req.body.author = { id: req.body.userId }
+      req.body.author = { id: req.body.userId };
+      if (!req.file)
+      throw new HttpError(406, 'Not Acceptable', 'Invalid multer file');
+      const imgData = await this.cloudinaryService.uploadImage(req.file.path);
+      debug('createHobbie', imgData)
+      req.body.picture = imgData;
       super.create(req, res, next);
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  async update(req: Request, res: Response, next: NextFunction) {
-    try {
-      const result = await this.repo.update(req.params.id, req.body);
-      res.json(result);
     } catch (error) {
       next(error);
     }
@@ -61,4 +42,5 @@ export class HobbiesController extends Controller<Hobbies>{
       next(error);
     }
   }
+
 }

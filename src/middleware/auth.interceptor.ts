@@ -20,11 +20,12 @@ export class AuthInterceptor {
       const token = tokenHeader.split(' ')[1];
       const tokenPayload = Auth.verifyAndGetPayload(token);
       req.body.userId = tokenPayload.id;
+      debug('req.body.id', req.body.userId);
       next();
     } catch (error) {
       next(error);
     }
-  }
+  }   // Objetnemos el id a partir del token y lo ponemos en el body
 
   async authenticationHobbies(req: Request, res: Response, next: NextFunction) {
     try {

@@ -15,7 +15,7 @@ export class FileInterceptor {
       limits: { fileSize },
     };
 
-    const middleware = multer(options).single(fileName);
+    const middleware = multer(options).single(fileName);  // Busca en el formulario y toda la info del fichero incluido el fichero lo
     // Save as req.file is the `fileName` file
     // req.body will hold the text fields, if there were any
 

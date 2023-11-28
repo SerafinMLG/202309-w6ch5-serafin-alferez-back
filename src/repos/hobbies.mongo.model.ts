@@ -15,6 +15,8 @@ const hobbiesSchema = new Schema<Hobbies>({
   picture: {
     publicId: String,
     size: Number,
+    height: Number,
+    width: Number,
     format: String,
     url: String,
   },
