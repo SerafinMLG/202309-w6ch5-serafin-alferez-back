@@ -28,6 +28,7 @@ hobbiesRouter.patch(
   '/:id',
   interceptor.authorization.bind(interceptor), // Seste interceptor tiene la finalidad de darme el id que viene en el token
   interceptor.authenticationHobbies.bind(interceptor),
+  fileInterceptor.singleFileStore('picture').bind(fileInterceptor),
   controller.update.bind(controller)
 );
 

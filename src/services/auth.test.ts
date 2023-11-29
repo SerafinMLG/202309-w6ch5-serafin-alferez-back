@@ -21,7 +21,7 @@ describe('Given Auth abstract class', () => {
     test('Then compare should ...', () => {
       (compare as jest.Mock).mockReturnValue(true);
       const mockValue = '';
-      const result = Auth.comparison(mockValue, mockValue);
+      const result = Auth.compare(mockValue, mockValue);
       expect(compare).toHaveBeenCalled()
       expect(result).toBe(true);
     });

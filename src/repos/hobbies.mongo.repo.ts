@@ -15,7 +15,6 @@ export class HobbiesMongoRepo implements Repository<Hobbies> {
     debug('Instantiated');
   }
 
-
   async getAll(): Promise<Hobbies[]> {
     const result = await HobbieModel.find()
       .populate('author', {
@@ -60,14 +59,16 @@ export class HobbiesMongoRepo implements Repository<Hobbies> {
     return result;
   }
 
-  async update(id: string, updatedItem: Partial<Hobbies>): Promise<Hobbies> {
+  async update(
+    id: string,
+    updatedItem: Partial<Hobbies>
+  ): Promise<Hobbies> {
     const result = await HobbieModel.findByIdAndUpdate(id, updatedItem, {
       new: true,
     })
-      .populate('author', {
-        hobbies: 0,
-      })
+      .populate('author', { hobbie: 0 })
       .exec();
+      // Console.log('Update result:', result);
     if (!result) throw new HttpError(404, 'Not Found', 'Update not possible');
     return result;
   }

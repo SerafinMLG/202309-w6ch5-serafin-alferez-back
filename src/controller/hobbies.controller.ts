@@ -43,4 +43,14 @@ export class HobbiesController extends Controller<Hobbies>{
     }
   }
 
+  async update(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await this.repo.update(req.params.id, req.body);
+      console.log(result);
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
 }
