@@ -19,7 +19,9 @@ usersRouter.get('/', controller.getAll.bind(controller));
 usersRouter.post(
   '/register',
   fileInterceptor.singleFileStore('avatar').bind(fileInterceptor),
-  controller.create.bind(controller)
 );
 usersRouter.post('/login', controller.login.bind(controller));
-usersRouter.patch('/login', interceptor.authorization.bind(interceptor), controller.login.bind(controller));   // Hacemos login with token
+usersRouter.patch('/login', 
+  interceptor.authorization.bind(interceptor), 
+  controller.login.bind(controller)
+);   // Hacemos login with token
