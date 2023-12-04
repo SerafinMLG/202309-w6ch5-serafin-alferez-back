@@ -19,8 +19,9 @@ export class UsersMongoRepo implements Repository<User> {
   }
 
   async login(loginUser: LoginUser): Promise<User> {
+    debug('login email', loginUser.email)
     const result = await UserModel.findOne({ email: loginUser.email }).exec();
-    if (!result || !(await Auth.comparison(loginUser.passwd, result.passwd)))
+    if (!result || !(await Auth.compare(loginUser.passwd, result.passwd)))
       throw new HttpError(401, 'Unauthorized');
     return result;
   }
@@ -36,15 +37,21 @@ export class UsersMongoRepo implements Repository<User> {
     return result;
   }
 
-  // Ssearch({
-  //   key,
-  //   value,
-  // }: {
-  //   key: 'id' | 'name' | keyof LoginUser | 'surname' | 'age' | 'hobbies';
-  //   value: unknown;
-  // }): Promise<User[]> {
-  //   throw new Error('Method not implemented.');
-  // }
+  async search({
+    key,
+    value,
+  }: {
+    key:
+      | 'id'
+      | 'name'
+      | keyof LoginUser
+      | 'surname'
+      | 'age'
+    value: unknown;
+  }): Promise<User[]> {
+    const result = await UserModel.find({ [key]: value }).exec();
+    return result;
+  }
 
   async update(id: string, updatedItem: Partial<User>): Promise<User> {
     const result = await UserModel.findByIdAndUpdate(id, updatedItem, {
@@ -54,7 +61,10 @@ export class UsersMongoRepo implements Repository<User> {
     return result;
   }
 
-  delete(_id: string): Promise<void> {
-    throw new Error('Method not implemented.');
+  async delete(id: string): Promise<void> {
+    const result = await UserModel.findByIdAndDelete(id).exec();
+    if (!result) {
+      throw new HttpError(404, 'Not Found', 'Delete not possible');
+    }
   }
 }

@@ -13,7 +13,12 @@ const hobbiesSchema = new Schema<Hobbies>({
     type: String,
   },
   picture: {
-    type: String,
+    publicId: String,
+    size: Number,
+    height: Number,
+    width: Number,
+    format: String,
+    url: String,
   },
 });
 
